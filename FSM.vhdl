@@ -2,10 +2,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity FSM is
-   port (instruction,T1,T2,T3: in std_logic_vector(15 downto 0); r, clk,init_carry,init_zero: in std_logic;
+   port (instruction,T1,T2,T3,mem: in std_logic_vector(15 downto 0); r, clk,init_carry,init_zero: in std_logic;
 	w1,w2,w3,w4,w5,w6,w7,
-	m1,m20,m21,m30,m31,m4,m50,m51,m60,m61,m70,m71,m8,m90,m91,m92,m100,m101,mux,
-	carry,zero,done : out std_logic);
+	m1,m20,m21,m30,m31,m4,m50,m51,m60,m61,m70,m71,m8,m90,m91,m100,m101,mux,
+	carry,zero,done,alucont,m12: out std_logic);
 end entity;
 
 architecture Behave4 of FSM is
@@ -18,8 +18,8 @@ begin
 process(r,clk,instruction,init_carry,init_zero,T1,T2,T3,fsm_state_symbol)
      variable nq_var : StateSymbol;
 	  variable w1_var,w2_var,w3_var,w4_var,w5_var,w6_var,w7_var,
-	  m1_var,m20_var,m21_var,m30_var,m31_var,m4_var,m50_var,m51_var,m60_var,m61_var,m70_var,m71_var,m8_var,m90_var,m91_var,m92_var,m100_var,m101_var,
-	  carry_var,zero_var,mux_var,done_var : std_logic;
+	  m1_var,m20_var,m21_var,m30_var,m31_var,m4_var,m50_var,m51_var,m60_var,m61_var,m70_var,m71_var,m8_var,m90_var,m91_var,m100_var,m101_var,
+	  carry_var,zero_var,mux_var,done_var,alu_var,m12_var : std_logic;
 
   begin
 
@@ -32,7 +32,7 @@ process(r,clk,instruction,init_carry,init_zero,T1,T2,T3,fsm_state_symbol)
 	  w6_var := '1';
 	  w7_var := '1';
 	  m1_var := '0';
-	  m20_var := '0';
+	  m20_var := '1';
 	  m21_var := '0';
 	  m30_var := '0';
 	  m31_var := '0';
@@ -46,14 +46,14 @@ process(r,clk,instruction,init_carry,init_zero,T1,T2,T3,fsm_state_symbol)
 	  m8_var := '0';
 	  m90_var := '0';
 	  m91_var := '0';
-	  m92_var := '0';
 	  m100_var := '0';
 	  m101_var := '0';
 	  carry_var := '1';
 	  zero_var := '1';
 	  mux_var := '0';
 	  done_var := '0';
-	  
+	  alu_var := '0';
+	  m12_var := '0';
 		
 
      -- compute next-state, output
@@ -63,13 +63,13 @@ process(r,clk,instruction,init_carry,init_zero,T1,T2,T3,fsm_state_symbol)
 				 m20_var := '1';
 	          m21_var := '0';
 
-          if (instruction(15 downto 12) = "0011" ) then
+          if (mem(15 downto 12) = "0011" ) then
              nq_var := s6;
 			
-			 elsif (instruction(15 downto 13) = "100") then
+			 elsif (mem(15 downto 13) = "100") then
              nq_var := s16;
 
-		   elsif (instruction(15 downto 12) = "1111") then
+		   elsif (mem(15 downto 12) = "1111") then
 			 nq_var := s0;
 				 
           else
@@ -115,13 +115,19 @@ process(r,clk,instruction,init_carry,init_zero,T1,T2,T3,fsm_state_symbol)
 				 w5_var := '0';
 				 m90_var := '0';
 	          m91_var := '1';
-	          m92_var := '0';
 				 m100_var := '0';
 	          m101_var := '1';
 				 m60_var := '0';
 	          m61_var := '1';
+				 if (instruction(15 downto 12) = "0000") then
 				 carry_var := '0';
+				 end if;
 				 zero_var := '0';
+				 if (instruction(15 downto 12) = "0010") then
+				 alu_var := '1';
+				 else
+				 alu_var := '0';
+				 end if;
 				 
 				 
 				nq_var := s3;
@@ -141,7 +147,6 @@ process(r,clk,instruction,init_carry,init_zero,T1,T2,T3,fsm_state_symbol)
 				 w5_var := '0';
 				 m90_var := '1';
 	          m91_var := '0';
-	          m92_var := '0';
 				 m100_var := '0';
 	          m101_var := '1';
 				 m60_var := '0';
@@ -176,7 +181,6 @@ process(r,clk,instruction,init_carry,init_zero,T1,T2,T3,fsm_state_symbol)
 				 w6_var := '0';
 				 m90_var := '1';
 	          m91_var := '0';
-	          m92_var := '0';
 				 m100_var := '1';
 	          m101_var := '1';
 				 m70_var := '0';
@@ -196,6 +200,7 @@ process(r,clk,instruction,init_carry,init_zero,T1,T2,T3,fsm_state_symbol)
 				 m20_var := '0';
 	          m21_var := '0';	
 				 m60_var := '0';
+
 	          m61_var := '0';	
 				 zero_var := '0';
 				 mux_var := '1';
@@ -223,26 +228,26 @@ process(r,clk,instruction,init_carry,init_zero,T1,T2,T3,fsm_state_symbol)
 
 				 
 		when s11 =>
+		-- change made here t1->mema
 					 w6_var := '0';
+					 w7_var := '0';
 				 m90_var := '1';
 	          m91_var := '1';
-	          m92_var := '0';
 				 m100_var := '0';
 	          m101_var := '1';
-				 m20_var := '0';
+				 m20_var := '1';
 	          m21_var := '1';
 				 m70_var := '1';
 	          m71_var := '1';	
-				 
+				 m8_var := '1';
 		       nq_var := s12;
 	
 				 
 		when s12 => 
 				 w4_var := '0';
 				 w5_var := '0';				 				 
-				 m90_var := '0';
-	          m91_var := '0';
-	          m92_var := '1';
+				 m90_var := '1';
+	          m91_var := '1';
 				 m100_var := '0';
 	          m101_var := '0';	
 				 m30_var := '1';
@@ -263,9 +268,8 @@ process(r,clk,instruction,init_carry,init_zero,T1,T2,T3,fsm_state_symbol)
 		when s13 =>
 				 w6_var := '0';
 				 w5_var := '0';				 
-				 m90_var := '0';
-	          m91_var := '0';
-	          m92_var := '1';
+				 m90_var := '1';
+	          m91_var := '1';
 				 m100_var := '0';
 	          m101_var := '0';
 				 m60_var := '0';
@@ -277,19 +281,17 @@ process(r,clk,instruction,init_carry,init_zero,T1,T2,T3,fsm_state_symbol)
 				nq_var := s14;
 
 	when s14 => 
-					 w6_var := '0';
+	-- changes made
+				w2_var := '0';
 				 w7_var := '0';
 				 m90_var := '1';
 	          m91_var := '1';
-	          m92_var := '0';
 				 m100_var := '0';
 	          m101_var := '1';
 				 m20_var := '1';
-	          m21_var := '1';
-				 m70_var := '1';
-	          m71_var := '1';       
+	          m21_var := '1';      
 				 m8_var := '1';
-				 
+				 m12_var := '1';
 			   if (T3(2 downto 0) = "000" ) then
              nq_var := sa;
 	
@@ -302,7 +304,6 @@ process(r,clk,instruction,init_carry,init_zero,T1,T2,T3,fsm_state_symbol)
 				 w1_var := '0';
 				 m90_var := '0';
 	          m91_var := '0';
-	          m92_var := '0';
 				 m100_var := '1';
 	          m101_var := '0';
 				 m1_var := '0';
@@ -333,7 +334,6 @@ process(r,clk,instruction,init_carry,init_zero,T1,T2,T3,fsm_state_symbol)
 					 w1_var := '0';
 				 m90_var := '1';
 	          m91_var := '0';
-	          m92_var := '0';
 				 m100_var := '1';
 	          m101_var := '0';
 				 m1_var := '0';
@@ -352,7 +352,6 @@ process(r,clk,instruction,init_carry,init_zero,T1,T2,T3,fsm_state_symbol)
 				 w1_var := '0';				 
 				 m90_var := '1';
 	          m91_var := '1';
-	          m92_var := '0';
 				 m100_var := '1';
 	          m101_var := '0';	
 				 m1_var := '0';
@@ -393,13 +392,14 @@ m71 <= m71_var;
 m8 <= m8_var;
 m90 <= m90_var;
 m91 <= m91_var;
-m92 <= m92_var;
 m100 <= m100_var;
 m101 <= m101_var;
 carry <= carry_var;
 zero <= zero_var;
 mux <= mux_var;
 done <= done_var;
+alucont <= alu_var;
+m12 <= m12_var;
      -- q(k+1) = nq(k)
      if(rising_edge(clk)) then
           if (r = '1') then

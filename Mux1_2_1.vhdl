@@ -10,5 +10,5 @@ end Mux1_2_1;
 
 architecture struct of Mux1_2_1 is
 begin
-	y <= (A and not S0) or (A and S0); 
+	y <= (A and not S0) or (B and S0); 
 end struct;
