@@ -1,6 +1,12 @@
 # EE224-IITBProc
 EE224 Digital Design Course Project
 
+## Team Members
+1. Amey 170070013
+2. Preetam 170070042 
+3. Rishi 170070044
+4. Ram Prakash 170070047
+
 ## Component List
 
 ### ARITHEMATIC UNIT
