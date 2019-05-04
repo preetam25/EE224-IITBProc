@@ -16,6 +16,7 @@ entity Memory_asyncread_syncwrite is
 end entity;
 
 architecture Form of Memory_asyncread_syncwrite is 
+
 type regarray is array(31 downto 0) of std_logic_vector(15 downto 0);   -- defining a new type
 signal Memory: regarray:=(
 	0 => x"4054",
@@ -43,6 +44,7 @@ signal Memory: regarray:=(
 	others => x"0000");
 	
 -- 1 => x"3000",2 => x"1057",3 => x"4442",4 => x"0458",5 => x"2460",6 => x"2921",7 => x"1111",8 => x"2921",9 => x"58c0",10 => x"7292",11 => x"6e60",12 => x"c040",13 => x"127f",14 => x"c241",16 => x"9440",22 => x"83f5",25 => x"ffed",others => "0000000000000000");
+
 -- you can use the above mentioned way to initialise the memory with the instructions and the data as required to test your processor
 begin
 Mem_dataout <= Memory(conv_integer(address));
