@@ -1,11 +1,16 @@
-# EE224-IITBProc
-EE224 Digital Design Course Project
+# IITB-Proc: A Multi-cycle Processor
 
-## Team Members
-1. Amey 170070013
-2. Preetam 170070042 
-3. Rishi 170070044
-4. Ram Prakash 170070047
+IITB-Proc is a multi-cycle processor described in VHDL and implemented on an FPGA.
+
+This project is part of Digital Systems (EE224 @EE.IITB)
+
+### Team
+* [Ameya Anjarlekar](https://github.com/ameyanjarlekar)
+* [Preetam Pinnada](https://github.com/preetam25)
+* [Ram Prakash](https://github.com/lone-e-wolf)
+* Rishi Varrey
+
+[Design Document](/DesignReport.pdf)
 
 ## Component List
 
