@@ -1,6 +1,6 @@
 # IITB-Proc: A Multi-cycle Processor
 
-IITB-Proc is a multi-cycle processor described in VHDL and implemented on an FPGA.
+A 16-bit multi-cycle processor described in VHDL and implemented on an FPGA.
 
 This project is part of Digital Systems (EE224 @EE.IITB)
 
